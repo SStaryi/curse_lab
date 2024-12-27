@@ -1,0 +1,79 @@
+{% extends 'medical/base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Список студентов{% endblock %}
+{% block page_title %}Список студентов{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            {% for field in filter.form %}
+            <div class="col-auto">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field|add_class:"form-control" }}
+            </div>
+            {% endfor %}
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search me-1"></i>Поиск
+                </button>
+                <a href="{% url 'medical:student_list' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-undo me-1"></i>Сбросить
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Список студентов</h5>
+        <a href="{% url 'medical:student_create' %}" class="btn btn-primary btn-sm">
+            <i class="fas fa-plus me-1"></i>Добавить студента
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ФИО</th>
+                        <th>Группа</th>
+                        <th>Студ. билет</th>
+                        <th>Год поступления</th>
+                        <th>Телефон</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.user.get_full_name }}</td>
+                        <td>{{ student.group }}</td>
+                        <td>{{ student.student_id }}</td>
+                        <td>{{ student.year_of_admission }}</td>
+                        <td>{{ student.phone }}</td>
+                        <td>
+                            <a href="{% url 'medical:student_profile_detail' student.pk %}" class="btn btn-sm btn-outline-info" title="Просмотр профиля">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{% url 'medical:student_edit' student.pk %}" class="btn btn-sm btn-outline-primary" title="Редактировать">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'medical:student_delete' student.pk %}" class="btn btn-sm btn-outline-danger" title="Удалить">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">Нет студентов</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} 

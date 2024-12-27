@@ -1,0 +1,16 @@
+{% extends 'medical/base.html' %}
+
+{% block title %}Выход{% endblock %}
+{% block page_title %}Выход{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body text-center">
+        <h4 class="mb-4">Вы успешно вышли из системы</h4>
+        <p>Спасибо за работу!</p>
+        <a href="{% url 'login' %}" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt me-1"></i>Войти снова
+        </a>
+    </div>
+</div>
+{% endblock %} 

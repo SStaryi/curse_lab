@@ -1,0 +1,84 @@
+{% extends 'medical/base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Преподаватели{% endblock %}
+{% block page_title %}Преподаватели{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            {% for field in filter.form %}
+            <div class="col-auto">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field|add_class:"form-control" }}
+            </div>
+            {% endfor %}
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search me-1"></i>Поиск
+                </button>
+                <a href="{% url 'medical:teacher_list' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-undo me-1"></i>Сбросить
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Список преподавателей</h5>
+        <a href="{% url 'medical:teacher_create' %}" class="btn btn-primary btn-sm">
+            <i class="fas fa-plus me-1"></i>Добавить преподавателя
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Фото</th>
+                        <th>ФИО</th>
+                        <th>Кафедра</th>
+                        <th>Должность</th>
+                        <th>Ученая степень</th>
+                        <th>Телефон</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for teacher in teachers %}
+                    <tr>
+                        <td>
+                            {% if teacher.photo %}
+                                <img src="{{ teacher.photo.url }}" alt="Фото" class="rounded-circle" width="40" height="40">
+                            {% else %}
+                                <i class="fas fa-user-circle fa-2x text-secondary"></i>
+                            {% endif %}
+                        </td>
+                        <td>{{ teacher.user.get_full_name }}</td>
+                        <td>{{ teacher.department.name }}</td>
+                        <td>{{ teacher.position }}</td>
+                        <td>{{ teacher.academic_degree }}</td>
+                        <td>{{ teacher.phone }}</td>
+                        <td>
+                            <a href="{% url 'medical:teacher_edit' teacher.pk %}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'medical:teacher_delete' teacher.pk %}" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center">Нет преподавателей</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} 

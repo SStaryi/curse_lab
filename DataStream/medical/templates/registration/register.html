@@ -1,0 +1,126 @@
+{% extends 'medical/base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Регистрация{% endblock %}
+{% block page_title %}Регистрация{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Регистрация нового пользователя</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Тип пользователя</label>
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" name="user_type" id="student" value="student" checked>
+                            <label class="btn btn-outline-primary" for="student">
+                                <i class="fas fa-user-graduate me-1"></i>Студент
+                            </label>
+                            
+                            <input type="radio" class="btn-check" name="user_type" id="teacher" value="teacher">
+                            <label class="btn btn-outline-primary" for="teacher">
+                                <i class="fas fa-chalkboard-teacher me-1"></i>Преподаватель
+                            </label>
+                        </div>
+                    </div>
+
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field|add_class:"form-control" }}
+                        {% if field.help_text %}
+                        <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ field.errors|join:", " }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <div id="student_fields" class="mb-3">
+                        <div class="mb-3">
+                            <label class="form-label">Групп��</label>
+                            <input type="text" name="group" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Номер студенческого</label>
+                            <input type="text" name="student_id" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Год поступления</label>
+                            <input type="number" name="year_of_admission" class="form-control">
+                        </div>
+                    </div>
+
+                    <div id="teacher_fields" class="mb-3" style="display: none;">
+                        <div class="mb-3">
+                            <label class="form-label">Кафедра</label>
+                            <select name="department" class="form-control">
+                                {% for dept in departments %}
+                                <option value="{{ dept.id }}">{{ dept.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Должность</label>
+                            <input type="text" name="position" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ученая степень</label>
+                            <input type="text" name="academic_degree" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Фото</label>
+                            <input type="file" name="photo" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Телефон</label>
+                        <input type="text" name="phone" class="form-control">
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus me-1"></i>Зарегистрироваться
+                        </button>
+                        <a href="{% url 'login' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-sign-in-alt me-1"></i>Уже есть аккаунт? Войти
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const studentFields = document.getElementById('student_fields');
+    const teacherFields = document.getElementById('teacher_fields');
+    const userTypeInputs = document.querySelectorAll('input[name="user_type"]');
+
+    userTypeInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            if (this.value === 'student') {
+                studentFields.style.display = 'block';
+                teacherFields.style.display = 'none';
+            } else {
+                studentFields.style.display = 'none';
+                teacherFields.style.display = 'block';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
+{% endblock %} 

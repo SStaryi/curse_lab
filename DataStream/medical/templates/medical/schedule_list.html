@@ -1,0 +1,86 @@
+{% extends 'medical/base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Расписание{% endblock %}
+{% block page_title %}Расписание{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            {% for field in filter.form %}
+            <div class="col-auto">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field|add_class:"form-control" }}
+            </div>
+            {% endfor %}
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search me-1"></i>Поиск
+                </button>
+                <a href="{% url 'medical:schedule_list' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-undo me-1"></i>Сбросить
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Расписание</h5>
+        <a href="{% url 'medical:schedule_create' %}" class="btn btn-primary btn-sm">
+            <i class="fas fa-plus me-1"></i>Добавить занятие
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>День недели</th>
+                        <th>Время</th>
+                        <th>Курс</th>
+                        <th>Преподаватель</th>
+                        <th>Группа</th>
+                        <th>Аудитория</th>
+                        <th>Тип занятия</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for schedule in schedules %}
+                    <tr>
+                        <td>{{ schedule.get_day_of_week_display }}</td>
+                        <td>{{ schedule.start_time }} - {{ schedule.end_time }}</td>
+                        <td>{{ schedule.course.name }}</td>
+                        <td>{{ schedule.teacher.user.get_full_name }}</td>
+                        <td>{{ schedule.group }}</td>
+                        <td>{{ schedule.room }}</td>
+                        <td>
+                            <span class="badge {% if schedule.lesson_type == 'LECTURE' %}bg-primary
+                                              {% elif schedule.lesson_type == 'PRACTICE' %}bg-success
+                                              {% else %}bg-info{% endif %}">
+                                {{ schedule.get_lesson_type_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'medical:schedule_edit' schedule.pk %}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'medical:schedule_delete' schedule.pk %}" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center">Нет занятий в расписании</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,97 @@
+{% extends 'medical/base.html' %}
+
+{% block title %}Панель управления преподавателя{% endblock %}
+{% block page_title %}Панель управления преподавателя{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Профиль преподавателя -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Мой профиль</h5>
+                <p><strong>Кафедра:</strong> {{ teacher.department.name }}</p>
+                <p><strong>Должность:</strong> {{ teacher.position }}</p>
+                <p><strong>Ученая степень:</strong> {{ teacher.academic_degree }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Расписание на сегодня -->
+    <div class="col-md-8 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Мое расписание на сегодня</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Время</th>
+                                <th>Предмет</th>
+                                <th>Группа</th>
+                                <th>Аудитория</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for schedule in my_schedule %}
+                            <tr>
+                                <td>{{ schedule.start_time }} - {{ schedule.end_time }}</td>
+                                <td>{{ schedule.course.name }}</td>
+                                <td>{{ schedule.group }}</td>
+                                <td>{{ schedule.room }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">Нет занятий</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Последние выставленные оценки -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Последние выставленные оценки</h5>
+                <a href="{% url 'medical:grade_list' %}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Выставить оценку
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Студент</th>
+                                <th>Предмет</th>
+                                <th>Оценка</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for grade in recent_grades %}
+                            <tr>
+                                <td>{{ grade.date }}</td>
+                                <td>{{ grade.student.user.get_full_name }}</td>
+                                <td>{{ grade.course.name }}</td>
+                                <td>{{ grade.value }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">Нет оценок</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

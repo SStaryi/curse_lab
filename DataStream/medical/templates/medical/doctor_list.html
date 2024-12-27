@@ -1,0 +1,60 @@
+{% extends 'medical/base.html' %}
+
+{% block title %}Список врачей{% endblock %}
+{% block page_title %}Список врачей{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Все врачи</h5>
+        <a href="#" class="btn btn-primary btn-sm">
+            <i class="fas fa-plus me-1"></i>Добавить врача
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Фото</th>
+                        <th>ФИО</th>
+                        <th>Специализация</th>
+                        <th>Отделение</th>
+                        <th>Телефон</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doctor in doctors %}
+                    <tr>
+                        <td>
+                            {% if doctor.photo %}
+                                <img src="{{ doctor.photo.url }}" alt="Фото врача" class="rounded-circle" width="40" height="40">
+                            {% else %}
+                                <i class="fas fa-user-md fa-2x text-secondary"></i>
+                            {% endif %}
+                        </td>
+                        <td>{{ doctor.user.get_full_name }}</td>
+                        <td>{{ doctor.specialization }}</td>
+                        <td>{{ doctor.department }}</td>
+                        <td>{{ doctor.phone }}</td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">Нет зарегистрированных врачей</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} 

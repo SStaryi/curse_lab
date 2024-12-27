@@ -1,0 +1,92 @@
+{% extends 'medical/base.html' %}
+
+{% block title %}Панель администратора{% endblock %}
+{% block page_title %}Панель администратора{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Статистика -->
+    <div class="col-md-4 mb-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h5 class="card-title">Преподаватели</h5>
+                <h2 class="display-4">{{ total_teachers }}</h2>
+                <a href="{% url 'medical:teacher_list' %}" class="btn btn-light mt-3">
+                    <i class="fas fa-users"></i> Управление
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5 class="card-title">Студенты</h5>
+                <h2 class="display-4">{{ total_students }}</h2>
+                <a href="{% url 'medical:student_list' %}" class="btn btn-light mt-3">
+                    <i class="fas fa-user-graduate"></i> Управление
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h5 class="card-title">Курсы</h5>
+                <h2 class="display-4">{{ total_courses }}</h2>
+                <a href="{% url 'medical:course_list' %}" class="btn btn-light mt-3">
+                    <i class="fas fa-book"></i> Просмотр
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Последние зарегистрированные пользователи -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Последние регистрации</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Дата регистрации</th>
+                                <th>Пользователь</th>
+                                <th>Email</th>
+                                <th>Тип</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in recent_users %}
+                            <tr>
+                                <td>{{ user.date_joined }}</td>
+                                <td>{{ user.get_full_name }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    {% if user.is_superuser %}
+                                        <span class="badge bg-danger">Администратор</span>
+                                    {% elif user.teacher %}
+                                        <span class="badge bg-primary">Преподаватель</span>
+                                    {% elif user.student %}
+                                        <span class="badge bg-success">Студент</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Не определен</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">Нет новых пользователей</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,54 @@
+{% extends 'medical/base.html' %}
+
+{% block title %}Панель управления{% endblock %}
+{% block page_title %}Панель управления{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Статистика</h5>
+                <div class="row text-center">
+                    <div class="col">
+                        <h3>{{ total_courses }}</h3>
+                        <p>Курсов</p>
+                    </div>
+                    <div class="col">
+                        <h3>{{ total_teachers }}</h3>
+                        <p>Преподавателей</p>
+                    </div>
+                    <div class="col">
+                        <h3>{{ total_students }}</h3>
+                        <p>Студентов</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if user.student %}
+    <div class="col-md-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Мои последние оценки</h5>
+            </div>
+            <div class="card-body">
+                <!-- Таблица с оценками -->
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Ближайшие занятия</h5>
+            </div>
+            <div class="card-body">
+                <!-- Таблица с расписанием -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,81 @@
+{% extends 'medical/base.html' %}
+
+{% block title %}Мои оценки{% endblock %}
+{% block page_title %}Мои оценки{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Мои оценки</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Предмет</th>
+                        <th>Преподаватель</th>
+                        <th>Оценка</th>
+                        <th>Комментарий</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for grade in grades %}
+                    <tr>
+                        <td>{{ grade.date }}</td>
+                        <td>{{ grade.course.name }}</td>
+                        <td>{{ grade.teacher.user.get_full_name }}</td>
+                        <td>
+                            <span class="badge {% if grade.grade == '5' %}bg-success
+                                           {% elif grade.grade == '4' %}bg-primary
+                                           {% elif grade.grade == '3' %}bg-warning
+                                           {% else %}bg-danger{% endif %}">
+                                {{ grade.get_grade_display }}
+                            </span>
+                        </td>
+                        <td>{{ grade.comments|default:"-" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">У вас пока нет оценок</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Статистика -->
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Средний балл</h5>
+                <h2 class="display-4">
+                    {{ average_grade|default:"0.00" }}
+                </h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Всего оценок</h5>
+                <h2 class="display-4">{{ grades|length }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Предметов</h5>
+                <h2 class="display-4">
+                    {{ unique_courses_count }}
+                </h2>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

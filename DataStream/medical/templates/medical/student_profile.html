@@ -1,0 +1,121 @@
+{% extends 'medical/base.html' %}
+
+{% block title %}Профиль студента{% endblock %}
+{% block page_title %}Профиль студента{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Информация о студенте</h5>
+            </div>
+            <div class="card-body">
+                <h4>{{ student.user.get_full_name }}</h4>
+                <p class="text-muted mb-2">{{ student.group }}</p>
+                <hr>
+                <dl class="row mb-0">
+                    <dt class="col-sm-5">Студ. билет:</dt>
+                    <dd class="col-sm-7">{{ student.student_id }}</dd>
+                    
+                    <dt class="col-sm-5">Год поступления:</dt>
+                    <dd class="col-sm-7">{{ student.year_of_admission }}</dd>
+                    
+                    <dt class="col-sm-5">Телефон:</dt>
+                    <dd class="col-sm-7">{{ student.phone }}</dd>
+                    
+                    <dt class="col-sm-5">Email:</dt>
+                    <dd class="col-sm-7">{{ student.user.email }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <!-- Расписание -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Расписание занятий</h5>
+                <a href="{% url 'medical:student_schedule' %}" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-calendar-alt me-1"></i>Полное расписание
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>День</th>
+                                <th>Время</th>
+                                <th>Предмет</th>
+                                <th>Преподаватель</th>
+                                <th>Аудитория</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in schedule|slice:":5" %}
+                            <tr>
+                                <td>{{ item.get_day_of_week_display }}</td>
+                                <td>{{ item.start_time }} - {{ item.end_time }}</td>
+                                <td>{{ item.course.name }}</td>
+                                <td>{{ item.teacher.user.get_full_name }}</td>
+                                <td>{{ item.room }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">Нет занятий</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Оценки -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Последние оценки</h5>
+                <a href="{% url 'medical:student_grades' %}" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-graduation-cap me-1"></i>Все оценки
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Предмет</th>
+                                <th>Оценка</th>
+                                <th>Преподаватель</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for grade in grades|slice:":5" %}
+                            <tr>
+                                <td>{{ grade.date }}</td>
+                                <td>{{ grade.course.name }}</td>
+                                <td>
+                                    <span class="badge {% if grade.grade == '5' %}bg-success
+                                                      {% elif grade.grade == '4' %}bg-primary
+                                                      {% elif grade.grade == '3' %}bg-warning
+                                                      {% else %}bg-danger{% endif %}">
+                                        {{ grade.get_grade_display }}
+                                    </span>
+                                </td>
+                                <td>{{ grade.teacher.user.get_full_name }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">Нет оценок</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

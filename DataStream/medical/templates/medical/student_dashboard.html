@@ -1,0 +1,93 @@
+{% extends 'medical/base.html' %}
+
+{% block title %}Моя панель управления{% endblock %}
+{% block page_title %}Моя панель управления{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Профиль студента -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Мой профиль</h5>
+                <p><strong>Группа:</strong> {{ student.group }}</p>
+                <p><strong>Год поступления:</strong> {{ student.year_of_admission }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Расписание на сегодня -->
+    <div class="col-md-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Мое расписание на сегодня</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Время</th>
+                                <th>Предмет</th>
+                                <th>Преподаватель</th>
+                                <th>Аудитория</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for schedule in my_schedule %}
+                            <tr>
+                                <td>{{ schedule.start_time }} - {{ schedule.end_time }}</td>
+                                <td>{{ schedule.course.name }}</td>
+                                <td>{{ schedule.teacher.user.get_full_name }}</td>
+                                <td>{{ schedule.room }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">Нет занятий</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Последние оценки -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Мои последние оценки</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Предмет</th>
+                                <th>Оценка</th>
+                                <th>Комментарий</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for grade in my_grades %}
+                            <tr>
+                                <td>{{ grade.date }}</td>
+                                <td>{{ grade.course.name }}</td>
+                                <td>{{ grade.value }}</td>
+                                <td>{{ grade.comment }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">Нет оценок</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

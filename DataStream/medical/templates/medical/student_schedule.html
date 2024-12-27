@@ -1,0 +1,50 @@
+{% extends 'medical/base.html' %}
+
+{% block title %}Мое расписание{% endblock %}
+{% block page_title %}Мое расписание{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Расписание занятий</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>День недели</th>
+                        <th>Время</th>
+                        <th>Предмет</th>
+                        <th>Преподаватель</th>
+                        <th>Аудитория</th>
+                        <th>Тип занятия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for schedule in schedules %}
+                    <tr>
+                        <td>{{ schedule.get_day_of_week_display }}</td>
+                        <td>{{ schedule.start_time }} - {{ schedule.end_time }}</td>
+                        <td>{{ schedule.course.name }}</td>
+                        <td>{{ schedule.teacher.user.get_full_name }}</td>
+                        <td>{{ schedule.room }}</td>
+                        <td>
+                            <span class="badge {% if schedule.lesson_type == 'LECTURE' %}bg-primary
+                                           {% elif schedule.lesson_type == 'PRACTICE' %}bg-success
+                                           {% else %}bg-info{% endif %}">
+                                {{ schedule.get_lesson_type_display }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">Расписание пока не составлено</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} 
